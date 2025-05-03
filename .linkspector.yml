@@ -1,5 +1,5 @@
-dirs:
-  - .
+files:
+  - '*.md'
 ignorePatterns:
   - pattern: "^http://localhost"
   - pattern: "https://azure.microsoft.com/en-us/products/kubernetes-service"
