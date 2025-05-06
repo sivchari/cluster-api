@@ -573,3 +573,15 @@ func Convert_v1beta1_Condition_To_v1_Condition(_ *Condition, _ *metav1.Condition
 	// NOTE: legacy (v1beta1) conditions should not be automatically converted into v1beta2 conditions.
 	return nil
 }
+
+func Convert_v1beta1_MachineDeploymentSpec_To_v1beta2_MachineDeploymentSpec(in *MachineDeploymentSpec, out *clusterv1.MachineDeploymentSpec, s apimachineryconversion.Scope) error {
+	return autoConvert_v1beta1_MachineDeploymentSpec_To_v1beta2_MachineDeploymentSpec(in, out, s)
+}
+
+func Convert_v1beta1_MachineSetSpec_To_v1beta2_MachineSetSpec(in *MachineSetSpec, out *clusterv1.MachineSetSpec, s apimachineryconversion.Scope) error {
+	return autoConvert_v1beta1_MachineSetSpec_To_v1beta2_MachineSetSpec(in, out, s)
+}
+
+func Convert_v1beta2_MachineSpec_To_v1beta1_MachineSpec(in *clusterv1.MachineSpec, out *MachineSpec, s apimachineryconversion.Scope) error {
+	return autoConvert_v1beta2_MachineSpec_To_v1beta1_MachineSpec(in, out, s)
+}
