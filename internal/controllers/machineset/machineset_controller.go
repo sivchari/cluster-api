@@ -1202,8 +1202,9 @@ func (r *Reconciler) reconcileStatus(ctx context.Context, s *scope) error {
 		}
 
 		if noderefutil.IsNodeReady(node) {
+			minReadySeconds := ptr.Deref(machine.Spec.MinReadySeconds, 0)
 			readyReplicasCount++
-			if noderefutil.IsNodeAvailable(node, ms.Spec.MinReadySeconds, metav1.Now()) {
+			if noderefutil.IsNodeAvailable(node, minReadySeconds, metav1.Now()) {
 				availableReplicasCount++
 			}
 		} else if machine.GetDeletionTimestamp().IsZero() {
@@ -1282,20 +1283,21 @@ func (r *Reconciler) reconcileStatus(ctx context.Context, s *scope) error {
 }
 
 func shouldRequeueForReplicaCountersRefresh(s *scope) ctrl.Result {
+	minReadySeconds := ptr.Deref(s.machineSet.Spec.Template.Spec.MinReadySeconds, 0)
 	replicas := ptr.Deref(s.machineSet.Spec.Replicas, 0)
 
-	// Resync the MachineSet after MinReadySeconds as a last line of defense to guard against clock-skew.
+	// Resync the MachineSet after minReadySeconds as a last line of defense to guard against clock-skew.
 	// Clock-skew is an issue as it may impact whether an available replica is counted as a ready replica.
-	// A replica is available if the amount of time since last transition exceeds MinReadySeconds.
+	// A replica is available if the amount of time since last transition exceeds minReadySeconds.
 	// If there was a clock skew, checking whether the amount of time since last transition to ready state
-	// exceeds MinReadySeconds could be incorrect.
-	// To avoid an available replica stuck in the ready state, we force a reconcile after MinReadySeconds,
+	// exceeds minReadySeconds could be incorrect.
+	// To avoid an available replica stuck in the ready state, we force a reconcile after minReadySeconds,
 	// at which point it should confirm any available replica to be available.
 	// TODO (v1beta2) Use new replica counters
-	if s.machineSet.Spec.MinReadySeconds > 0 &&
+	if minReadySeconds > 0 &&
 		s.machineSet.Status.Deprecated.V1Beta1.ReadyReplicas == replicas &&
 		s.machineSet.Status.Deprecated.V1Beta1.AvailableReplicas != replicas {
-		minReadyResult := ctrl.Result{RequeueAfter: time.Duration(s.machineSet.Spec.MinReadySeconds) * time.Second}
+		minReadyResult := ctrl.Result{RequeueAfter: time.Duration(minReadySeconds) * time.Second}
 		return minReadyResult
 	}
 

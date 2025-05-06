@@ -2648,9 +2648,8 @@ func TestComputeDesiredMachine(t *testing.T) {
 					},
 				},
 				Spec: clusterv1.MachineSetSpec{
-					ClusterName:     testClusterName,
-					Replicas:        ptr.To[int32](3),
-					MinReadySeconds: 10,
+					ClusterName: testClusterName,
+					Replicas:    ptr.To[int32](3),
 					Selector: metav1.LabelSelector{
 						MatchLabels: map[string]string{"k1": "v1"},
 					},
@@ -2678,9 +2677,8 @@ func TestComputeDesiredMachine(t *testing.T) {
 					},
 				},
 				Spec: clusterv1.MachineSetSpec{
-					ClusterName:     testClusterName,
-					Replicas:        ptr.To[int32](3),
-					MinReadySeconds: 10,
+					ClusterName: testClusterName,
+					Replicas:    ptr.To[int32](3),
 					Selector: metav1.LabelSelector{
 						MatchLabels: map[string]string{"k1": "v1"},
 					},
@@ -2704,9 +2702,8 @@ func TestComputeDesiredMachine(t *testing.T) {
 					},
 				},
 				Spec: clusterv1.MachineSetSpec{
-					ClusterName:     testClusterName,
-					Replicas:        ptr.To[int32](3),
-					MinReadySeconds: 10,
+					ClusterName: testClusterName,
+					Replicas:    ptr.To[int32](3),
 					Selector: metav1.LabelSelector{
 						MatchLabels: map[string]string{"k1": "v1"},
 					},
@@ -2734,9 +2731,8 @@ func TestComputeDesiredMachine(t *testing.T) {
 					},
 				},
 				Spec: clusterv1.MachineSetSpec{
-					ClusterName:     testClusterName,
-					Replicas:        ptr.To[int32](3),
-					MinReadySeconds: 10,
+					ClusterName: testClusterName,
+					Replicas:    ptr.To[int32](3),
 					Selector: metav1.LabelSelector{
 						MatchLabels: map[string]string{"k1": "v1"},
 					},
@@ -2760,9 +2756,8 @@ func TestComputeDesiredMachine(t *testing.T) {
 					},
 				},
 				Spec: clusterv1.MachineSetSpec{
-					ClusterName:     testClusterName,
-					Replicas:        ptr.To[int32](3),
-					MinReadySeconds: 10,
+					ClusterName: testClusterName,
+					Replicas:    ptr.To[int32](3),
 					Selector: metav1.LabelSelector{
 						MatchLabels: map[string]string{"k1": "v1"},
 					},
@@ -2786,9 +2781,8 @@ func TestComputeDesiredMachine(t *testing.T) {
 					},
 				},
 				Spec: clusterv1.MachineSetSpec{
-					ClusterName:     testClusterName,
-					Replicas:        ptr.To[int32](3),
-					MinReadySeconds: 10,
+					ClusterName: testClusterName,
+					Replicas:    ptr.To[int32](3),
 					Selector: metav1.LabelSelector{
 						MatchLabels: map[string]string{"k1": "v1"},
 					},
