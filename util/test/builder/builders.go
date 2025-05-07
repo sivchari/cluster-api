@@ -1686,7 +1686,7 @@ func (m *MachinePoolBuilder) Build() *expv1.MachinePool {
 		},
 	}
 	if m.minReadySeconds != nil {
-		obj.Spec.Template.Spec.MinReadySeconds = *m.minReadySeconds
+		obj.Spec.Template.Spec.MinReadySeconds = m.minReadySeconds
 	}
 	if m.bootstrap != nil {
 		obj.Spec.Template.Spec.Bootstrap.ConfigRef = objToRef(m.bootstrap)
@@ -1836,7 +1836,7 @@ func (m *MachineDeploymentBuilder) Build() *clusterv1.MachineDeployment {
 		}
 	}
 	if m.minReadySeconds != nil {
-		obj.Spec.Template.Spec.MinReadySeconds = *m.minReadySeconds
+		obj.Spec.Template.Spec.MinReadySeconds = m.minReadySeconds
 	}
 
 	return obj
