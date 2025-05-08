@@ -462,6 +462,12 @@ func ScaleSpec(ctx context.Context, inputGetter func() ScaleSpecInput) {
 			}
 		}
 
+		for _, cluster := range clusterCreateResults {
+			Byf("Verify v1beta2 Available and Ready conditions (if exist) to be true for Cluster and Machines")
+			verifyV1Beta2ConditionsTrueV1Beta1(ctx, input.BootstrapClusterProxy.GetClient(), cluster.clusterName, namespace.Name,
+				[]string{clusterv1.AvailableCondition, clusterv1.ReadyCondition})
+		}
+
 		// TODO(ykakarap): Follow-up: Dump resources for the failed clusters (creation).
 
 		clusterNamesToDelete := []string{}
