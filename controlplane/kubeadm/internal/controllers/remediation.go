@@ -368,7 +368,7 @@ func (r *KubeadmControlPlaneReconciler) reconcileUnhealthyMachines(ctx context.C
 		controlplanev1.RemediationInProgressAnnotation: remediationInProgressValue,
 	})
 
-	return ctrl.Result{Requeue: true}, nil
+	return ctrl.Result{}, nil // No need to requeue here. Machine deletion above triggers reconciliation.
 }
 
 // Gets the machine to be remediated, which is the "most broken" among the unhealthy machines, determined as the machine
