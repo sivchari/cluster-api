@@ -146,7 +146,7 @@ type tiltProviderConfig struct {
 }
 
 func init() {
-	cmd := exec.Command("git", "rev-parse", "--show-toplevel") //nolint:noctx
+	cmd := exec.Command("git", "rev-parse", "--show-toplevel") //nolint:noctx // init() does not have a context.
 	var stdout, stderr bytes.Buffer
 	cmd.Stdout = &stdout
 	cmd.Stderr = &stderr
@@ -529,7 +529,7 @@ func runTask(ctx context.Context, wg *sync.WaitGroup, prefix string, f taskFunct
 // makeTask generates a task for invoking a make target.
 func makeTask(name string) taskFunction {
 	return func(ctx context.Context, prefix string, errCh chan error) {
-		cmd := exec.CommandContext(ctx, "make", name)
+		cmd := exec.CommandContext(ctx, "make", name) //nolint:gosec // G204: name is a trusted make target, not user input.
 
 		var stderr bytes.Buffer
 		cmd.Dir = rootPath
@@ -715,7 +715,7 @@ func workloadTask(name, workloadType, binaryName, containerName string, liveRelo
 		args := []string{"build"}
 		args = append(args, options...)
 		args = append(args, path)
-		kustomizeCmd := exec.CommandContext(ctx, kustomizePath, args...)
+		kustomizeCmd := exec.CommandContext(ctx, kustomizePath, args...) //nolint:gosec // G204: kustomizePath and args are trusted internal values.
 		var stdout1, stderr1 bytes.Buffer
 		kustomizeCmd.Dir = rootPath
 		kustomizeCmd.Stdout = &stdout1

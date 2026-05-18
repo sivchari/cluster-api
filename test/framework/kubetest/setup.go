@@ -27,11 +27,11 @@ func copyFile(srcFilePath, destFilePath string) error {
 	if err := os.MkdirAll(path.Dir(destFilePath), 0o750); err != nil {
 		return err
 	}
-	srcFile, err := os.Open(filepath.Clean(srcFilePath))
+	srcFile, err := os.Open(filepath.Clean(srcFilePath)) //nolint:gosec // G304: srcFilePath is provided by the test framework, not user input.
 	if err != nil {
 		return err
 	}
-	destFile, err := os.Create(destFilePath)
+	destFile, err := os.Create(destFilePath) //nolint:gosec // G304: destFilePath is provided by the test framework, not user input.
 	if err != nil {
 		return err
 	}

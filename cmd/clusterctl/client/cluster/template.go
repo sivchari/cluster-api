@@ -161,14 +161,14 @@ func (t *templateClient) getURLContent(ctx context.Context, templateURL string) 
 }
 
 func (t *templateClient) getLocalFileContent(rURL *url.URL) ([]byte, error) {
-	f, err := os.Stat(rURL.Path)
+	f, err := os.Stat(rURL.Path) //nolint:gosec // G703: rURL.Path comes from a parsed URL, not raw user input.
 	if err != nil {
 		return nil, errors.Errorf("failed to read file %q", rURL.Path)
 	}
 	if f.IsDir() {
 		return nil, errors.Errorf("invalid path: file %q is actually a directory", rURL.Path)
 	}
-	content, err := os.ReadFile(rURL.Path)
+	content, err := os.ReadFile(rURL.Path) //nolint:gosec // G703: rURL.Path comes from a parsed URL, not raw user input.
 	if err != nil {
 		return nil, errors.Wrapf(err, "failed to read file %q", rURL.Path)
 	}
@@ -247,7 +247,7 @@ func (t *templateClient) getRawURLFileContent(ctx context.Context, rURL string) 
 	if err != nil {
 		return nil, err
 	}
-	defer response.Body.Close()
+	defer response.Body.Close() //nolint:gosec // G703: Error is not relevant when closing a response body on the happy path.
 
 	if response.StatusCode != http.StatusOK {
 		return nil, errors.Errorf("failed to get file, got %d", response.StatusCode)

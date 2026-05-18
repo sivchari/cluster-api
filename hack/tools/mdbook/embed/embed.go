@@ -61,7 +61,7 @@ func (l Embed) Process(input *plugin.Input) error {
 		if err != nil {
 			return "", err
 		}
-		defer resp.Body.Close()
+		defer resp.Body.Close() //nolint:gosec // G706: Error from Close is not actionable here.
 
 		out, err := io.ReadAll(resp.Body)
 		return string(out), err

@@ -112,7 +112,7 @@ func CreateRepository(ctx context.Context, input CreateRepositoryInput) string {
 				}
 
 				destinationFile := filepath.Join(filepath.Dir(destinationPath), file.TargetName)
-				Expect(os.WriteFile(destinationFile, data, 0600)).To(Succeed(), "Failed to write clusterctl local repository file %q / %q", provider.Name, file.TargetName)
+				Expect(os.WriteFile(destinationFile, data, 0600)).To(Succeed(), "Failed to write clusterctl local repository file %q / %q", provider.Name, file.TargetName) //nolint:gosec // G703: destinationFile is constructed from trusted test inputs.
 			}
 		}
 		p := providerConfig{
@@ -251,7 +251,7 @@ func getComponentSourceFromURL(ctx context.Context, source ProviderVersionSource
 				getErr = errors.Errorf("failed to get %s: got status code %d", source.Value, resp.StatusCode)
 				return false, nil
 			}
-			defer resp.Body.Close()
+			defer resp.Body.Close() //nolint:gosec // G703: Error is not relevant when closing a response body on the happy path.
 			buf, err = io.ReadAll(resp.Body)
 			if err != nil {
 				getErr = errors.Wrapf(err, "failed to get %s: failed to read body", source.Value)
