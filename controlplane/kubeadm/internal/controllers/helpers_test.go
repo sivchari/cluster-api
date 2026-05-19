@@ -957,7 +957,7 @@ type managedFieldEntry struct {
 }
 
 func toManagedFields(managedFields []managedFieldEntry) []metav1.ManagedFieldsEntry {
-	res := []metav1.ManagedFieldsEntry{}
+	res := make([]metav1.ManagedFieldsEntry, 0, len(managedFields))
 	for _, f := range managedFields {
 		res = append(res, metav1.ManagedFieldsEntry{
 			Manager:     f.Manager,

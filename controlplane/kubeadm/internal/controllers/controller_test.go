@@ -521,7 +521,8 @@ func TestKubeadmControlPlaneReconciler_adoption(t *testing.T) {
 			Machines: collections.Machines{},
 			Workload: &fakeWorkloadCluster{},
 		}
-		objs := []client.Object{builder.GenericInfrastructureMachineTemplateCRD, cluster.DeepCopy(), kcp.DeepCopy(), tmpl.DeepCopy()}
+		objs := make([]client.Object, 0, 10)
+		objs = append(objs, builder.GenericInfrastructureMachineTemplateCRD, cluster.DeepCopy(), kcp.DeepCopy(), tmpl.DeepCopy())
 		for i := range 3 {
 			name := fmt.Sprintf("test-%d", i)
 			m := &clusterv1.Machine{
@@ -589,7 +590,8 @@ func TestKubeadmControlPlaneReconciler_adoption(t *testing.T) {
 			Machines: collections.Machines{},
 			Workload: &fakeWorkloadCluster{},
 		}
-		objs := []client.Object{builder.GenericInfrastructureMachineTemplateCRD, cluster.DeepCopy(), kcp.DeepCopy(), tmpl.DeepCopy()}
+		objs := make([]client.Object, 0, 13)
+		objs = append(objs, builder.GenericInfrastructureMachineTemplateCRD, cluster.DeepCopy(), kcp.DeepCopy(), tmpl.DeepCopy())
 		for i := range 3 {
 			name := fmt.Sprintf("test-%d", i)
 			m := &clusterv1.Machine{
@@ -700,7 +702,8 @@ func TestKubeadmControlPlaneReconciler_adoption(t *testing.T) {
 			Machines: collections.Machines{},
 			Workload: &fakeWorkloadCluster{},
 		}
-		objs := []client.Object{builder.GenericInfrastructureMachineTemplateCRD, cluster.DeepCopy(), kcp.DeepCopy(), tmpl.DeepCopy()}
+		objs := make([]client.Object, 0, 10)
+		objs = append(objs, builder.GenericInfrastructureMachineTemplateCRD, cluster.DeepCopy(), kcp.DeepCopy(), tmpl.DeepCopy())
 		for i := range 3 {
 			name := fmt.Sprintf("test-%d", i)
 			m := &clusterv1.Machine{
@@ -841,13 +844,14 @@ func TestKubeadmControlPlaneReconciler_ensureOwnerReferences(t *testing.T) {
 	kcpOwner := *metav1.NewControllerRef(kcp, controlplanev1.GroupVersion.WithKind("KubeadmControlPlane"))
 
 	t.Run("add KCP owner for secrets with no controller reference", func(*testing.T) {
-		objs := []client.Object{builder.GenericInfrastructureMachineTemplateCRD, cluster.DeepCopy(), kcp.DeepCopy(), tmpl.DeepCopy()}
 		certificates := secret.Certificates{
 			{Purpose: secret.ClusterCA},
 			{Purpose: secret.FrontProxyCA},
 			{Purpose: secret.ServiceAccount},
 			{Purpose: secret.EtcdCA},
 		}
+		objs := make([]client.Object, 0, 4+len(certificates))
+		objs = append(objs, builder.GenericInfrastructureMachineTemplateCRD, cluster.DeepCopy(), kcp.DeepCopy(), tmpl.DeepCopy())
 		for _, c := range certificates {
 			s := clusterSecret.DeepCopy()
 			// Set the secret name to the purpose
@@ -878,13 +882,14 @@ func TestKubeadmControlPlaneReconciler_ensureOwnerReferences(t *testing.T) {
 	})
 
 	t.Run("replace non-KCP controller with KCP controller reference", func(*testing.T) {
-		objs := []client.Object{builder.GenericInfrastructureMachineTemplateCRD, cluster.DeepCopy(), kcp.DeepCopy(), tmpl.DeepCopy()}
 		certificates := secret.Certificates{
 			{Purpose: secret.ClusterCA},
 			{Purpose: secret.FrontProxyCA},
 			{Purpose: secret.ServiceAccount},
 			{Purpose: secret.EtcdCA},
 		}
+		objs := make([]client.Object, 0, 4+len(certificates))
+		objs = append(objs, builder.GenericInfrastructureMachineTemplateCRD, cluster.DeepCopy(), kcp.DeepCopy(), tmpl.DeepCopy())
 		for _, c := range certificates {
 			s := clusterSecret.DeepCopy()
 			// Set the secret name to the purpose
@@ -929,13 +934,14 @@ func TestKubeadmControlPlaneReconciler_ensureOwnerReferences(t *testing.T) {
 
 	t.Run("does not add owner reference to user-provided secrets", func(t *testing.T) {
 		g := NewWithT(t)
-		objs := []client.Object{builder.GenericInfrastructureMachineTemplateCRD, cluster.DeepCopy(), kcp.DeepCopy(), tmpl.DeepCopy()}
 		certificates := secret.Certificates{
 			{Purpose: secret.ClusterCA},
 			{Purpose: secret.FrontProxyCA},
 			{Purpose: secret.ServiceAccount},
 			{Purpose: secret.EtcdCA},
 		}
+		objs := make([]client.Object, 0, 4+len(certificates))
+		objs = append(objs, builder.GenericInfrastructureMachineTemplateCRD, cluster.DeepCopy(), kcp.DeepCopy(), tmpl.DeepCopy())
 		for _, c := range certificates {
 			s := clusterSecret.DeepCopy()
 			// Set the secret name to the purpose
@@ -4206,11 +4212,12 @@ kubernetesVersion: metav1.16.1`,
 
 	t.Run("should not return an error when no DNS upgrade is requested", func(t *testing.T) {
 		g := NewWithT(t)
-		objs := []client.Object{
+		objs := make([]client.Object, 0, 4)
+		objs = append(objs,
 			cluster.DeepCopy(),
 			corednsCM.DeepCopy(),
 			kubeadmCM.DeepCopy(),
-		}
+		)
 		kcp := kcp.DeepCopy()
 		kcp.Annotations = map[string]string{controlplanev1.SkipCoreDNSAnnotation: ""}
 
@@ -4271,7 +4278,8 @@ func TestKubeadmControlPlaneReconciler_reconcileDelete(t *testing.T) {
 
 		cluster, kcp, _ := createClusterWithControlPlane(metav1.NamespaceDefault)
 		controllerutil.AddFinalizer(kcp, controlplanev1.KubeadmControlPlaneFinalizer)
-		initObjs := []client.Object{cluster.DeepCopy(), kcp.DeepCopy()}
+		initObjs := make([]client.Object, 0, 5)
+		initObjs = append(initObjs, cluster.DeepCopy(), kcp.DeepCopy())
 
 		machines := collections.New()
 		for i := range 3 {
@@ -4346,7 +4354,8 @@ func TestKubeadmControlPlaneReconciler_reconcileDelete(t *testing.T) {
 		cluster, kcp, _ := createClusterWithControlPlane(metav1.NamespaceDefault)
 		controllerutil.AddFinalizer(kcp, controlplanev1.KubeadmControlPlaneFinalizer)
 
-		initObjs := []client.Object{cluster.DeepCopy(), kcp.DeepCopy()}
+		initObjs := make([]client.Object, 0, 15)
+		initObjs = append(initObjs, cluster.DeepCopy(), kcp.DeepCopy())
 
 		for i := range 10 {
 			initObjs = append(initObjs, &clusterv1.Machine{
@@ -4407,7 +4416,8 @@ func TestKubeadmControlPlaneReconciler_reconcileDelete(t *testing.T) {
 		cluster, kcp, _ := createClusterWithControlPlane(metav1.NamespaceDefault)
 		controllerutil.AddFinalizer(kcp, controlplanev1.KubeadmControlPlaneFinalizer)
 
-		initObjs := []client.Object{cluster.DeepCopy(), kcp.DeepCopy()}
+		initObjs := make([]client.Object, 0, 15)
+		initObjs = append(initObjs, cluster.DeepCopy(), kcp.DeepCopy())
 
 		for i := range 10 {
 			initObjs = append(initObjs, &clusterv1.MachinePool{

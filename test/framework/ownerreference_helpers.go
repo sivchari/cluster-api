@@ -355,8 +355,8 @@ func DockerInfraOwnerReferenceAssertions(topologyManaged bool) map[string]func(t
 }
 
 func HasExactOwners(gotOwners []metav1.OwnerReference, wantOwners ...metav1.OwnerReference) error {
-	wantComparable := []string{}
-	gotComparable := []string{}
+	wantComparable := make([]string, 0, len(wantOwners))
+	gotComparable := make([]string, 0, len(gotOwners))
 	for _, ref := range gotOwners {
 		gotComparable = append(gotComparable, ownerReferenceString(ref))
 	}
@@ -441,7 +441,7 @@ func changeOwnerReferencesAPIVersion(ctx context.Context, proxy ClusterProxy, na
 		helper, err := patch.NewHelper(obj, proxy.GetClient())
 		Expect(err).ToNot(HaveOccurred())
 
-		newOwners := []metav1.OwnerReference{}
+		newOwners := make([]metav1.OwnerReference, 0, len(obj.GetOwnerReferences()))
 		for _, owner := range obj.GetOwnerReferences() {
 			gv, err := schema.ParseGroupVersion(owner.APIVersion)
 			Expect(err).To(Succeed())

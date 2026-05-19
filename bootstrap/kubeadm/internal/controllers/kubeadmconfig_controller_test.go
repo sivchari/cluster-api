@@ -56,7 +56,7 @@ func TestKubeadmConfigReconciler_MachineToBootstrapMapFuncReturn(t *testing.T) {
 	g := NewWithT(t)
 	cluster := builder.Cluster("my-cluster", metav1.NamespaceDefault).Build()
 	objs := []client.Object{cluster}
-	machineObjs := []client.Object{}
+	machineObjs := make([]client.Object, 0, 3)
 	var expectedConfigName string
 	for i := range 3 {
 		configName := fmt.Sprintf("my-config-%d", i)
@@ -498,7 +498,7 @@ func TestKubeadmConfigReconciler_Reconcile_GenerateCloudConfigData(t *testing.T)
 
 	addKubeadmConfigToMachine(controlPlaneInitConfig, controlPlaneInitMachine)
 
-	objects := []client.Object{
+	objects := []client.Object{ //nolint:prealloc // Not all paths append
 		cluster,
 		controlPlaneInitMachine,
 		controlPlaneInitConfig,
@@ -560,7 +560,7 @@ func TestKubeadmConfigReconciler_Reconcile_ErrorIfJoiningControlPlaneHasInvalidC
 	controlPlaneJoinConfig.Spec.JoinConfiguration.ControlPlane = nil // Makes controlPlaneJoinConfig invalid for a control plane machine
 	addKubeadmConfigToMachine(controlPlaneJoinConfig, controlPlaneJoinMachine)
 
-	objects := []client.Object{
+	objects := []client.Object{ //nolint:prealloc // Not all paths append
 		cluster,
 		controlPlaneJoinMachine,
 		controlPlaneJoinConfig,
@@ -604,7 +604,7 @@ func TestKubeadmConfigReconciler_Reconcile_RequeueIfControlPlaneIsMissingAPIEndp
 	workerJoinConfig := newWorkerJoinKubeadmConfig(metav1.NamespaceDefault, "worker-join-cfg")
 	addKubeadmConfigToMachine(workerJoinConfig, workerMachine)
 
-	objects := []client.Object{
+	objects := []client.Object{ //nolint:prealloc // Not all paths append
 		cluster,
 		workerMachine,
 		workerJoinConfig,
@@ -682,7 +682,7 @@ func TestReconcileIfJoinCertificatesAvailableConditioninNodesAndControlPlaneIsRe
 			config := rt.configBuilder(rt.machine.Namespace, rt.configName)
 			addKubeadmConfigToMachine(config, rt.machine)
 
-			objects := []client.Object{
+			objects := []client.Object{ //nolint:prealloc // Not all paths append
 				cluster,
 				rt.machine,
 				config,
@@ -758,7 +758,7 @@ func TestReconcileIfJoinNodePoolsAndControlPlaneIsReady(t *testing.T) {
 			config := rt.configBuilder(rt.machinePool.Namespace, rt.configName)
 			addKubeadmConfigToMachinePool(config, rt.machinePool)
 
-			objects := []client.Object{
+			objects := []client.Object{ //nolint:prealloc // Not all paths append
 				cluster,
 				rt.machinePool,
 				config,
@@ -857,7 +857,7 @@ func TestBootstrapDataFormat(t *testing.T) {
 			}
 			config.Spec.Format = tc.format
 
-			objects := []client.Object{
+			objects := []client.Object{ //nolint:prealloc // Not all paths append
 				cluster,
 				machine,
 				config,
@@ -939,7 +939,7 @@ func TestKubeadmConfigSecretCreatedStatusNotPatched(t *testing.T) {
 	workerMachine := newWorkerMachineForCluster(cluster)
 	workerJoinConfig := newWorkerJoinKubeadmConfig(metav1.NamespaceDefault, "worker-join-cfg")
 	addKubeadmConfigToMachine(workerJoinConfig, workerMachine)
-	objects := []client.Object{
+	objects := []client.Object{ //nolint:prealloc // Not all paths append
 		cluster,
 		workerMachine,
 		workerJoinConfig,
@@ -1014,7 +1014,7 @@ func TestBootstrapTokenTTLExtension(t *testing.T) {
 	controlPlaneJoinMachine := newControlPlaneMachine(cluster, "control-plane-join-machine")
 	controlPlaneJoinConfig := newControlPlaneJoinKubeadmConfig(controlPlaneJoinMachine.Namespace, "control-plane-join-cfg")
 	addKubeadmConfigToMachine(controlPlaneJoinConfig, controlPlaneJoinMachine)
-	objects := []client.Object{
+	objects := []client.Object{ //nolint:prealloc // Not all paths append
 		cluster,
 		workerMachine,
 		workerJoinConfig,
@@ -1257,7 +1257,7 @@ func TestBootstrapTokenRotationMachinePool(t *testing.T) {
 	workerMachinePool := newWorkerMachinePoolForCluster(cluster)
 	workerJoinConfig := newWorkerJoinKubeadmConfig(workerMachinePool.Namespace, "workerpool-join-cfg")
 	addKubeadmConfigToMachinePool(workerJoinConfig, workerMachinePool)
-	objects := []client.Object{
+	objects := []client.Object{ //nolint:prealloc // Not all paths append
 		cluster,
 		workerMachinePool,
 		workerJoinConfig,
@@ -1449,7 +1449,7 @@ func TestBootstrapTokenRefreshIfTokenSecretCleaned(t *testing.T) {
 		workerMachine := newWorkerMachineForCluster(cluster)
 		workerJoinConfig := newWorkerJoinKubeadmConfig(metav1.NamespaceDefault, "worker-join-cfg")
 		addKubeadmConfigToMachine(workerJoinConfig, workerMachine)
-		objects := []client.Object{
+		objects := []client.Object{ //nolint:prealloc // Not all paths append
 			cluster,
 			workerMachine,
 			workerJoinConfig,
@@ -1522,7 +1522,7 @@ func TestBootstrapTokenRefreshIfTokenSecretCleaned(t *testing.T) {
 		workerMachinePool := newWorkerMachinePoolForCluster(cluster)
 		workerJoinConfig := newWorkerJoinKubeadmConfig(workerMachinePool.Namespace, "workerpool-join-cfg")
 		addKubeadmConfigToMachinePool(workerJoinConfig, workerMachinePool)
-		objects := []client.Object{
+		objects := []client.Object{ //nolint:prealloc // Not all paths append
 			cluster,
 			workerMachinePool,
 			workerJoinConfig,
@@ -1895,7 +1895,7 @@ func TestKubeadmConfigReconciler_Reconcile_AlwaysCheckCAVerificationUnlessReques
 	controlPlaneConfigName := "my-config"
 	config := newKubeadmConfig(metav1.NamespaceDefault, controlPlaneConfigName)
 
-	objects := []client.Object{
+	objects := []client.Object{ //nolint:prealloc // Not all paths append
 		cluster, machine, workerMachine, config,
 	}
 	objects = append(objects, createSecrets(t, cluster, initConfig)...)
@@ -2111,13 +2111,9 @@ func TestKubeadmConfigReconciler_Reconcile_PatchWhenErrorOccurred(t *testing.T) 
 	controlPlaneInitConfig := newControlPlaneInitKubeadmConfig(controlPlaneInitMachine.Namespace, "control-plane-init-cfg")
 	addKubeadmConfigToMachine(controlPlaneInitConfig, controlPlaneInitMachine)
 
-	objects := []client.Object{
-		cluster,
-		controlPlaneInitMachine,
-		controlPlaneInitConfig,
-	}
-
 	secrets := createSecrets(t, cluster, controlPlaneInitConfig)
+	objects := make([]client.Object, 0, 3+len(secrets))
+	objects = append(objects, cluster, controlPlaneInitMachine, controlPlaneInitConfig)
 	for _, obj := range secrets {
 		s := obj.(*corev1.Secret)
 		delete(s.Data, secret.TLSCrtDataName) // destroy the secrets, which will cause Reconcile to fail
@@ -2619,11 +2615,11 @@ func addKubeadmConfigToMachinePool(config *bootstrapv1.KubeadmConfig, machinePoo
 func createSecrets(t *testing.T, cluster *clusterv1.Cluster, config *bootstrapv1.KubeadmConfig) []client.Object {
 	t.Helper()
 
-	out := []client.Object{}
 	certificates := secret.NewCertificatesForInitialControlPlane(&config.Spec.ClusterConfiguration)
 	if err := certificates.Generate(); err != nil {
 		t.Fatal(err)
 	}
+	out := make([]client.Object, 0, len(certificates))
 	for _, certificate := range certificates {
 		out = append(out, certificate.AsSecret(util.ObjectKey(cluster), *metav1.NewControllerRef(config, bootstrapv1.GroupVersion.WithKind("KubeadmConfig"))))
 	}
@@ -2737,7 +2733,7 @@ func TestKubeadmConfigReconciler_Reconcile_v1beta2_conditions(t *testing.T) {
 				Name:       tt.machine.Name,
 			}})
 
-			objects := []client.Object{cluster, tt.machine, tt.config}
+			objects := []client.Object{cluster, tt.machine, tt.config} //nolint:prealloc // Not all paths append
 			objects = append(objects, createSecrets(t, cluster, tt.config)...)
 
 			myclient := fake.NewClientBuilder().WithObjects(objects...).WithStatusSubresource(&bootstrapv1.KubeadmConfig{}).Build()
